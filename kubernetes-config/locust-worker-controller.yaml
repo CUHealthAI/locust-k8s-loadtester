@@ -30,11 +30,15 @@ spec:
     spec:
       containers:
         - name: locust-worker
-          image: gcr.io/[PROJECT_ID]/locust-tasks:latest
+          image: gcr.io/monarch-stack-loadtest/locust-tasks:latest
           env:
             - name: LOCUST_MODE
               value: worker
             - name: LOCUST_MASTER
               value: locust-master
             - name: TARGET_HOST
-              value: https://[TARGET_HOST]
+              value: https://monarch-test.ddns.net
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "0.8"

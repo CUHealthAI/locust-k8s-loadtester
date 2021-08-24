@@ -31,12 +31,12 @@ spec:
     spec:
       containers:
         - name: locust-master
-          image: gcr.io/[PROJECT_ID]/locust-tasks:latest
+          image: gcr.io/monarch-stack-loadtest/locust-tasks:latest
           env:
             - name: LOCUST_MODE
               value: master
             - name: TARGET_HOST
-              value: https://[TARGET_HOST]
+              value: https://monarch-test.ddns.net
           ports:
             - name: loc-master-web
               containerPort: 8089
@@ -47,3 +47,7 @@ spec:
             - name: loc-master-p2
               containerPort: 5558
               protocol: TCP
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "0.8"
