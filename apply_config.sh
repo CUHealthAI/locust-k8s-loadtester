@@ -12,5 +12,9 @@ if [ ! -z "$TARGET" -a ! -z "$PROJECT" ]; then
     sed -i -e "s/\[PROJECT_ID\]/$PROJECT/g" kubernetes-config/locust-worker-controller.yaml
 
     # OS X sed creates these weird tempfiles, remove them
-    rm kubernetes-config/*.yaml-e
+    rm kubernetes-config/*.yaml-e 2>/dev/null
+
+    echo "Done!"
+else
+    echo "No target set, nothing done."
 fi
