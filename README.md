@@ -1,5 +1,10 @@
 ## Distribute Load Testing Using GKE
 
+NOTE: this repo is based on https://github.com/GoogleCloudPlatform/distributed-load-testing-using-kubernetes with significant modifications, some of which are:
+- bringing Locust up to date (2.1.0)
+- reorganizing the Dockerfile to make better use of layer caching
+- streamlining the param interpolation process a bit
+
 ## Introduction
 
 Load testing is key to the development of any backend infrastructure because load tests demonstrate how well the system functions when faced with real-world demands. An important aspect of load testing is the proper simulation of user and device behavior to identify and understand any possible system bottlenecks, well in advance of deploying applications to production.
