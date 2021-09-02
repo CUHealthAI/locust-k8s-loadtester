@@ -1,2 +1,2 @@
-/logs
-/archives
+/logs/*
+/archives/*

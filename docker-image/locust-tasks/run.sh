@@ -17,7 +17,7 @@
 
 LOCUST="/usr/local/bin/locust"
 LOCUST_TASK=${LOCUST_TASK:-monarch-random.py}
-LOCUS_OPTS="-f /locust-tasks/profiles/${LOCUST_TASK} ${LOCUST_EXTRA_ARGS} --host=$TARGET_HOST"
+LOCUS_OPTS="-f /locust-tasks/profiles/${LOCUST_TASK} --host=$TARGET_HOST"
 LOCUST_MODE=${LOCUST_MODE:-standalone}
 
 if [[ "$LOCUST_MODE" = "master" ]]; then
@@ -28,4 +28,4 @@ fi
 
 echo "$LOCUST $LOCUS_OPTS"
 
-$LOCUST $LOCUS_OPTS
+$LOCUST $LOCUS_OPTS "$@"
