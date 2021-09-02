@@ -37,6 +37,10 @@ spec:
               value: master
             - name: TARGET_HOST
               value: https://[TARGET_HOST]
+            - name: LOCUST_TASK
+              value: logparser.py
+            - name: LOCUST_EXTRA_ARGS
+              value: --target-logfile=/locust-tasks/profiles/logs/access.log-20210826
           ports:
             - name: loc-master-web
               containerPort: 8089
@@ -50,4 +54,4 @@ spec:
           resources:
             limits:
               memory: "64Mi"
-              cpu: "0.8"
+              cpu: "0.1"
