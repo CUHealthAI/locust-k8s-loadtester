@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: locust-master
-          image: gcr.io/[PROJECT_ID]/locust-tasks:latest
+          image: gcr.io/[PROJECT_ID]/locust-tasks:[IMAGE_TAG]
           env:
             - name: LOCUST_MODE
               value: master
@@ -40,7 +40,7 @@ spec:
             - name: LOCUST_TASK
               value: logparser.py
             - name: LOCUST_EXTRA_ARGS
-              value: --target-logfile=/locust-tasks/profiles/logs/access.log-20210826
+              value: '--target-logfile=/locust-tasks/profiles/logs/access.log-20210826'
           ports:
             - name: loc-master-web
               containerPort: 8089
@@ -51,7 +51,3 @@ spec:
             - name: loc-master-p2
               containerPort: 5558
               protocol: TCP
-          resources:
-            limits:
-              memory: "64Mi"
-              cpu: "0.1"
