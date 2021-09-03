@@ -19,13 +19,18 @@ import re
 from datetime import datetime
 from locust import HttpUser, TaskSet, task, events
 
+# allows POST queries
+# be wary with enabling this, since:
+# 1) the logs typically don't contain enough info for these to succeed
+# 2) if they do succeed, you should plan to clean up any side effects on the target host
+ALLOW_POST = False
+
 # 192.168.0.132 - - [25/Aug/2021:03:31:05 -0700] "GET /api/bioentity/disease/ORPHA:1899 HTTP/1.1" 200 2500 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
 logparse_re = re.compile(r'(?P<ip>([0-9]{1,3}\.){3}[0-9]{1,3}) - - \[(?P<timestamp>.*?)\] "(?P<query>.*?)" (?P<code>\d+) (?P<duration>\d+) "(?P<refer>.*?)" "(?P<agent>.*?)"')
 
 @events.init_command_line_parser.add_listener
 def _(parser):
     parser.add_argument("--target-logfile", type=str, env_var="LOCUST_TARGET_LOGFILE", default="", help="Logfile out of which to parse tasks")
-
 
 @events.init.add_listener
 def _(environment, **kw):
@@ -39,7 +44,14 @@ def rec_to_op(rec):
     """
 
     def query_task(self):
-        action, path, _ = rec['query'].split(" ")
+        try:
+            action, path, _ = rec['query'].split(" ")
+            if not ALLOW_POST and action == 'POST':
+                return
+        except ValueError:
+            print("Unable to parse %s" % rec['query'])
+            return
+        
         self.client.request(method=action, url=path)
     
     return query_task
