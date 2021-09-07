@@ -25,6 +25,9 @@ from locust import HttpUser, TaskSet, task, events
 # 2) if they do succeed, you should plan to clean up any side effects on the target host
 ALLOW_POST = False
 
+# sets cert verification for requests
+VERIFY_SSL = False
+
 # 192.168.0.132 - - [25/Aug/2021:03:31:05 -0700] "GET /api/bioentity/disease/ORPHA:1899 HTTP/1.1" 200 2500 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
 logparse_re = re.compile(r'(?P<ip>([0-9]{1,3}\.){3}[0-9]{1,3}) - - \[(?P<timestamp>.*?)\] "(?P<query>.*?)" (?P<code>\d+) (?P<duration>\d+) "(?P<refer>.*?)" "(?P<agent>.*?)"')
 
@@ -52,7 +55,7 @@ def rec_to_op(rec):
             print("Unable to parse %s" % rec['query'])
             return
         
-        self.client.request(method=action, url=path)
+        self.client.request(method=action, url=path, verify=VERIFY_SSL)
     
     return query_task
 
@@ -62,6 +65,8 @@ class LogLocust(HttpUser):
 
         target_logfile = environment.parsed_options.target_logfile
         print("LogLocust.__init__: Logfile supplied: %s" % target_logfile)
+
+        self.client.verify = VERIFY_SSL
 
         with open(target_logfile, "r") as fp:
             recs = [ m.groupdict() for m in [logparse_re.match(x) for x in fp.readlines()] if m is not None ]
