@@ -34,12 +34,15 @@ logparse_re = re.compile(r'(?P<ip>([0-9]{1,3}\.){3}[0-9]{1,3}) - - \[(?P<timesta
 @events.init_command_line_parser.add_listener
 def _(parser):
     parser.add_argument("--target-logfile", type=str, env_var="LOCUST_TARGET_LOGFILE", default="", help="Logfile out of which to parse tasks")
+    parser.add_argument("--disable-ssl", type=bool, env_var="LOCUST_DISABLE_SSL", default=False, help="Disables SSL verification")
 
 @events.init.add_listener
 def _(environment, **kw):
     print("Logfile supplied: %s" % environment.parsed_options.target_logfile)
+    if environment.parsed_options.disable_ssl:
+        print("SSL requests disabled")
 
-def rec_to_op(rec):
+def rec_to_op(rec, verify_ssl=True):
     """
     Converts a parsed record into an HTTP request.
 
@@ -55,7 +58,7 @@ def rec_to_op(rec):
             print("Unable to parse %s" % rec['query'])
             return
         
-        self.client.request(method=action, url=path, verify=VERIFY_SSL)
+        self.client.request(method=action, url=path, verify=verify_ssl)
     
     return query_task
 
@@ -64,12 +67,13 @@ class LogLocust(HttpUser):
         super().__init__(environment)
 
         target_logfile = environment.parsed_options.target_logfile
+        verify_ssl = not environment.parsed_options.disable_ssl
         print("LogLocust.__init__: Logfile supplied: %s" % target_logfile)
 
-        self.client.verify = VERIFY_SSL
+        self.client.verify = verify_ssl
 
         with open(target_logfile, "r") as fp:
             recs = [ m.groupdict() for m in [logparse_re.match(x) for x in fp.readlines()] if m is not None ]
             print("Read %d lines" % len(recs))
 
-        self.tasks = [ rec_to_op(x) for x in recs ]
+        self.tasks = [ rec_to_op(x, verify_ssl=verify_ssl) for x in recs ]
