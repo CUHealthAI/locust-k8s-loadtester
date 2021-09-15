@@ -58,8 +58,10 @@ def rec_to_op(rec, verify_ssl=True):
             print("Unable to parse %s" % rec['query'])
             return
         
-        self.client.request(method=action, url=path, verify=verify_ssl)
-    
+        with self.client.request(method=action, url=path, verify=verify_ssl, catch_response=True) as response:
+            if response.status_code < 500:
+                response.success()
+
     return query_task
 
 class LogLocust(HttpUser):
