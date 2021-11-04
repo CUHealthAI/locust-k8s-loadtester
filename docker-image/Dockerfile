@@ -17,7 +17,7 @@
 FROM python:3.7.2
 
 # Install the required dependencies via pip
-ADD locust-tasks/requirements.txt /tmp/requirements.txt
+ADD requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
 WORKDIR /locust-tasks
