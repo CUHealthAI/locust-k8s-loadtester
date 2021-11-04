@@ -4,7 +4,7 @@ source config.sh
 
 # replace markers w/actual values
 if [ ! -z "$TARGET" -a ! -z "$PROJECT" ]; then
-    EDIT_CMDS="s/\[TARGET_HOST\]/$TARGET/g ; s/\[PROJECT_ID\]/$PROJECT/g ; s/\[IMAGE_TAG\]/$CUR_GIT_HASH/g"
+    EDIT_CMDS="s/\[TARGET_HOST\]/$TARGET/g ; s/\[PROJECT_ID\]/$PROJECT/g ; s/\[IMAGE_TAG\]/$CUR_GIT_HASH/g ; s#\[LOGFILE\]#$LOGFILE#g"
 
     sed -e "$EDIT_CMDS" kubernetes-config/templates/locust-master-controller.yaml.TEMPLATE > kubernetes-config/locust-master-controller.yaml
     sed -e "$EDIT_CMDS" kubernetes-config/templates/locust-worker-controller.yaml.TEMPLATE > kubernetes-config/locust-worker-controller.yaml

@@ -40,7 +40,7 @@ spec:
             - name: LOCUST_TASK
               value: logparser.py
             - name: LOCUST_EXTRA_ARGS
-              value: '--target-logfile=/locust-tasks/profiles/logs/access.log-20210826'
+              value: '--target-logfile=[LOGFILE]'
           ports:
             - name: loc-master-web
               containerPort: 8089

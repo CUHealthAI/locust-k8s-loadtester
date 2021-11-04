@@ -41,4 +41,4 @@ spec:
             - name: LOCUST_TASK
               value: logparser.py
             - name: LOCUST_EXTRA_ARGS
-              value: '--target-logfile=/locust-tasks/profiles/logs/combined_nosim_access.log'
+              value: '--target-logfile=[LOGFILE]'
